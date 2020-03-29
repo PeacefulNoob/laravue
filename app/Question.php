@@ -20,7 +20,7 @@ class Question extends Model
     }
     public function getUrlAttribute()
     {
-        return route("questions.show",$this->slug);
+        return route("questions.show", $this->slug);
         // return route("question.show", $this->id);
     }
     public function getCreatedDateAttribute()
@@ -30,7 +30,7 @@ class Question extends Model
 
     public function getStatusAttribute()
     {
-        if ($this->answers > 0) {
+        if ($this->answers_count > 0) {
             if ($this->best_answer_id) {
                 return "answered-accepted";
             }
@@ -38,6 +38,15 @@ class Question extends Model
         }
         return "unanswered";
     }
-
- 
+    public function answers()
+    {
+        return $this->hasMany(Answer::class);
+        // $question->answers->count()
+        // foreach ($question->answers as $answer)
+    }
+    public function acceptBestAnswer(Answer $answer)
+    {
+        $this->best_answer_id = $answer->id;
+        $this->save();
+    }
 }

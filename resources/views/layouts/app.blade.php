@@ -18,6 +18,7 @@
     <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
 
     <!-- Styles -->
+    <link href="/fontawesome/css/all.css" rel="stylesheet">
     <link href="/css/mojCss.css" rel="stylesheet">
     <link href="/css/bootstrap.css" rel="stylesheet">
     <link href="/css/bootstrap.min.css" rel="stylesheet">
