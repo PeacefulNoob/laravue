@@ -17,7 +17,7 @@ class User extends Authenticatable
     protected $fillable = [
         'name', 'email', 'password',
     ];
-
+    protected $appends = ['url', 'avatar'];
     /**
      * The attributes that should be hidden for arrays.
      *
@@ -30,8 +30,8 @@ class User extends Authenticatable
     public function questions()
     {
         return $this->hasMany(Question::class);
-    }  
-    
+    }
+
     public function getUrlAttribute()
     {
         // return route("questions.show", $this->id);
@@ -45,10 +45,10 @@ class User extends Authenticatable
 
     public function getAvatarAttribute()
     {
-        $email = $this->email;        
+        $email = $this->email;
         $size = 32;
 
-        return "https://www.gravatar.com/avatar/" . md5( strtolower( trim( $email ) ) ) . "?s=" . $size;
+        return "https://www.gravatar.com/avatar/" . md5(strtolower(trim($email))) . "?s=" . $size;
     }
 
     public function favorites()
@@ -69,30 +69,29 @@ class User extends Authenticatable
     public function voteQuestion(Question $question, $vote)
     {
         $voteQuestions = $this->voteQuestions();
-        
+
         $this->_vote($voteQuestions, $question, $vote);
     }
 
     public function voteAnswer(Answer $answer, $vote)
     {
         $voteAnswers = $this->voteAnswers();
-        
+
         $this->_vote($voteAnswers, $answer, $vote);
-    }   
-    
+    }
+
     private function _vote($relationship, $model, $vote)
     {
         if ($relationship->where('votable_id', $model->id)->exists()) {
             $relationship->updateExistingPivot($model, ['vote' => $vote]);
-        }
-        else {
+        } else {
             $relationship->attach($model, ['vote' => $vote]);
         }
 
         $model->load('votes');
         $downVotes = (int) $model->downVotes()->sum('vote');
         $upVotes = (int) $model->upVotes()->sum('vote');
-        
+
         $model->votes_count = $upVotes + $downVotes;
         $model->save();
     }
