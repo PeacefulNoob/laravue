@@ -18,7 +18,7 @@
 
                 <div class="card-body">
                     @include('layouts._messages')
-                    @foreach($questions as $question)
+                    @forelse($questions as $question)
                     <div class="media">
                         <div class="d-flex flex-column counter">
                             <div class="vote">
@@ -51,11 +51,16 @@
                                 <small class="text-muted"> {{ $question->created_date }} </small>
                             </p>
 
-                            {{str_limit($question->body,250) }}
+                            <div class="excerpt"> {{ $question->excerpt}}
+                            </div>
                         </div>
                     </div>
                     <hr>
-                    @endforeach
+                    @empty
+                    <div class="alert alert-danger">
+                        <strong>Sorry </strong> NO question available
+                    </div>
+                    @endforelse
                     <div class="mx-auto">
                         {{ $questions->links() }}
                     </div>
